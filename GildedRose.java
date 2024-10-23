@@ -9,28 +9,41 @@ class GildedRose {
         this.items = items;
     }
 
+    public void print() {
+        for (Item item : items) 
+            System.out.println(item);
+    }
+
     public void updateSellIn(Item item) {
         if (!(item instanceof SulfurasItem))
             item.sellIn--;
     }
 
     public static void increaseQuality(Item item) {
+        increaseQuality(item, 1);
+    }
+
+    public static void increaseQuality(Item item, int value) {
         if (item.quality < MAX_QUALITY)
-            item.quality++;
+            item.quality += value;
     }    
 
-    public static void dropQuality(Item item) {
+    public static void dropQuality(Item item, int value) {
         if (item.sellIn > MIN_QUALITY)
-            item.quality--;
+            item.quality -= value;
+    }
+
+    public int checkSellIn(Item item) {
+        return (item.sellIn < MIN_SELLIN) ? 2 : 1;
     }
 
     public void updateQuality() {
         for (Item item : items) {
             updateSellIn(item);
             if (item instanceof SpecialItem) 
-                ((SpecialItem)item).dropSpecialItemQuality();
+                ((SpecialItem)item).updateSpecialItemQuality();
             else 
-                dropQuality(item);
+                dropQuality(item, checkSellIn(item));
         }
     }
 }

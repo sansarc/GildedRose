@@ -3,8 +3,7 @@ public abstract class SpecialItem extends Item {
         super(name, sellIn, quality);
     }
 
-    abstract void dropSpecialItemQuality();
-    abstract void increaseSpecialItemQuality();
+    abstract void updateSpecialItemQuality();
 }
 
 class AgedBrieItem extends SpecialItem {
@@ -13,50 +12,43 @@ class AgedBrieItem extends SpecialItem {
     }
 
     @Override
-    public void increaseSpecialItemQuality() {
+    public void updateSpecialItemQuality() {
         GildedRose.increaseQuality(this);
     }
-
-    @Override
-    public void dropSpecialItemQuality() {}
 }
 
-class BackstagePassesItem extends SpecialItem {
-    private final int SELLIN_BACKSTAGEPASSES_TRIPLE = 5;
-    private final int SELLIN_BACKSTAGEPASSES_DOUBLE = 10;
+class BackstagePassItem extends SpecialItem {
+    private final int SELLIN_BACKSTAGEPASS_TRIPLE = 5;
+    private final int SELLIN_BACKSTAGEPASS_DOUBLE = 10;
 
-    BackstagePassesItem(String name, int sellIn, int quality) {
+    BackstagePassItem(String name, int sellIn, int quality) {
         super(name, sellIn, quality);
     }
 
-    @Override
-    public void dropSpecialItemQuality() {
-        if (sellIn < 0) 
-            quality = 0;        
+    private int checkSellIn() {
+        int value = 1;
+        if (sellIn <= SELLIN_BACKSTAGEPASS_DOUBLE) 
+            value++;
+        if (sellIn <= SELLIN_BACKSTAGEPASS_TRIPLE) 
+            value++;
+        return value;
     }
 
     @Override
-    public void increaseSpecialItemQuality() {
-        if (sellIn <= SELLIN_BACKSTAGEPASSES_DOUBLE) 
-            quality++;
-        if (sellIn <= SELLIN_BACKSTAGEPASSES_TRIPLE) 
-            quality++;
+    public void updateSpecialItemQuality() {
+        if (sellIn < 0) 
+            quality = 0;        
+        else
+            GildedRose.increaseQuality(this, checkSellIn());
     }
 
 }
 
 class SulfurasItem extends SpecialItem {
-    private final int LEGENDARY_MAX_QUALITY = 80;
-
     SulfurasItem(String name, int sellIn, int quality) {
         super(name, sellIn, quality);
     }
 
     @Override
-    public void increaseSpecialItemQuality() {
-        quality = LEGENDARY_MAX_QUALITY;
-    }
-
-    @Override
-    public void dropSpecialItemQuality() { /* Sulfuras doesn't degrade */ }
+    public void updateSpecialItemQuality() {} // Sulfuras doesn't degrade 
 }
