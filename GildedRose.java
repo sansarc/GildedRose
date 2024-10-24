@@ -1,7 +1,7 @@
 class GildedRose {
     Item[] items;
 
-    // I'll add it here since I'm not supposed to modify the Item class
+    // I'm not supposed to modify the Item class
     final static int MAX_QUALITY = 50; 
     final static int MIN_QUALITY = 0, MIN_SELLIN = 0;
     
@@ -24,13 +24,15 @@ class GildedRose {
     }
 
     public static void increaseQuality(Item item, int value) {
-        if (item.quality < MAX_QUALITY)
-            item.quality += value;
+        item.quality = Math.min(MAX_QUALITY, item.quality + value);
     }    
 
     public static void dropQuality(Item item, int value) {
-        if (item.sellIn > MIN_QUALITY)
-            item.quality -= value;
+        item.quality = Math.max(MIN_QUALITY, item.quality - value);
+    }
+
+    public static void dropQuality(Item item) {
+        dropQuality(item, 1);
     }
 
     public int checkSellIn(Item item) {

@@ -1,3 +1,5 @@
+
+
 public abstract class SpecialItem extends Item {
     SpecialItem(String name, int sellIn, int quality) {
         super(name, sellIn, quality);
@@ -13,7 +15,10 @@ class AgedBrieItem extends SpecialItem {
 
     @Override
     public void updateSpecialItemQuality() {
-        GildedRose.increaseQuality(this);
+        if (sellIn < GildedRose.MIN_SELLIN)
+            GildedRose.increaseQuality(this, 2);
+        else
+            GildedRose.increaseQuality(this);
     }
 }
 
@@ -27,9 +32,9 @@ class BackstagePassItem extends SpecialItem {
 
     private int checkSellIn() {
         int value = 1;
-        if (sellIn <= SELLIN_BACKSTAGEPASS_DOUBLE) 
+        if (sellIn < SELLIN_BACKSTAGEPASS_DOUBLE) 
             value++;
-        if (sellIn <= SELLIN_BACKSTAGEPASS_TRIPLE) 
+        if (sellIn < SELLIN_BACKSTAGEPASS_TRIPLE) 
             value++;
         return value;
     }
