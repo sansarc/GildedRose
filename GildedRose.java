@@ -44,8 +44,10 @@ class GildedRose {
             updateSellIn(item);
             if (item instanceof SpecialItem) 
                 ((SpecialItem)item).updateSpecialItemQuality();
-            else 
-                dropQuality(item, checkSellIn(item));
+            else {
+                int amountToIncrease = checkSellIn(item);
+                dropQuality(item, amountToIncrease);
+            }
         }
     }
 }

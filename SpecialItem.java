@@ -25,26 +25,31 @@ class AgedBrieItem extends SpecialItem {
 class BackstagePassItem extends SpecialItem {
     private final int SELLIN_BACKSTAGEPASS_TRIPLE = 5;
     private final int SELLIN_BACKSTAGEPASS_DOUBLE = 10;
+    private final int TRIPLE_QUALITY_INCREASE = 3;
+    private final int DOUBLE_QUALITY_INCREASE = 2;
+
 
     BackstagePassItem(String name, int sellIn, int quality) {
         super(name, sellIn, quality);
     }
 
     private int checkSellIn() {
-        int value = 1;
-        if (sellIn < SELLIN_BACKSTAGEPASS_DOUBLE) 
-            value++;
         if (sellIn < SELLIN_BACKSTAGEPASS_TRIPLE) 
-            value++;
-        return value;
+            return TRIPLE_QUALITY_INCREASE;
+        else if (sellIn < SELLIN_BACKSTAGEPASS_DOUBLE) 
+            return DOUBLE_QUALITY_INCREASE;
+        else
+            return 1;
     }
 
     @Override
     public void updateSpecialItemQuality() {
         if (sellIn < 0) 
             quality = 0;        
-        else
-            GildedRose.increaseQuality(this, checkSellIn());
+        else {
+            int amountToIncrease = checkSellIn();
+            GildedRose.increaseQuality(this, amountToIncrease);
+        }
     }
 
 }
